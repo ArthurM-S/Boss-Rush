@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+from . import config  # <-- ESSENCIAL: importa o módulo config
 from .config import LARGURA, ALTURA, ROXO_BOSS, VERMELHO, AMARELO, BRANCO, carregar_imagem
 
 def carregar_sprite_sheet(caminho, qtd_frames, largura_frame, altura_frame, redimensionar=None):
@@ -51,6 +52,11 @@ class Boss:
             img = carregar_imagem(f"sprite_boss/efeito/FS_{i}.png", (32, 32))
             if img:
                 self.projetil_quadros.append(img)
+
+        # Som do ataque do boss
+        self.som_ataque = config.carregar_som("boss_attack.wav")
+        if self.som_ataque:
+            self.som_ataque.set_volume(0.2)
 
     def tomar_dano(self, dano=1):
         if self.vida > 0:
@@ -119,6 +125,9 @@ class Boss:
             })
             self.tempo_entre_ataques = random.randint(40, 90)
             self.estado = "attack"
+            # Toca o som do tiro
+            if self.som_ataque:
+                self.som_ataque.play()
 
         for proj in self.projeteis[:]:
             proj['x'] += proj['vx']
@@ -174,21 +183,14 @@ class Boss:
         if largura_vida < 0:
             largura_vida = 0
 
-        if vida_ratio > 0.6:
-            cor = (200, 30, 30)
-        elif vida_ratio > 0.3:
-            cor = (200, 30, 30)
-        else:
-            cor = (200, 30, 30)
-
+        cor = (200, 30, 30)
         vida_rect = pygame.Rect(x + 2, y + 2, largura_vida, altura_barra - 4)
         pygame.draw.rect(tela, cor, vida_rect, border_radius=2)
         pygame.draw.rect(tela, (0, 0, 0), fundo_rect, 3, border_radius=5)
 
-
         fonte_nome = pygame.font.Font(None, 18)
         nome = fonte_nome.render("Fire Ball", True, (200, 30, 30))
-        tela.blit(nome, (x + 20, y -18))
+        tela.blit(nome, (x + 20, y - 18))
 
         fonte = pygame.font.Font(None, 26)
         texto = fonte.render(f"{self.vida} / {self.vida_maxima}", True, BRANCO)

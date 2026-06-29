@@ -6,18 +6,29 @@ from . import config
 offset_x = 0
 offset_y = 0
 
+def tocar_musica_menu():
+    try:
+        pygame.mixer.music.load("assets/sounds/menu_music.wav")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.6)
+    except pygame.error as e:
+        print(f"Erro ao carregar música do menu: {e}")
+
 def tela_menu():
     global offset_x, offset_y
 
+    if not pygame.mixer.music.get_busy():
+        tocar_musica_menu()
+
     while True:
-        # --- Movimento do parallax baseado no mouse ---
+        # Movimento do parallax baseado no mouse
         mouse_x, mouse_y = pygame.mouse.get_pos()
         alvo_x = (mouse_x / config.LARGURA - 0.5) * 60
         alvo_y = (mouse_y / config.ALTURA - 0.5) * 40
         offset_x += (alvo_x - offset_x) * 0.05
         offset_y += (alvo_y - offset_y) * 0.05
 
-        # --- Background com camadas ---
+        # Background com camadas
         if config.BACKGROUND_LAYERS_MENU:
             for idx, camada in enumerate(config.BACKGROUND_LAYERS_MENU):
                 fator = 1.0 - (idx / len(config.BACKGROUND_LAYERS_MENU)) * 0.7
@@ -33,23 +44,23 @@ def tela_menu():
         else:
             config.TELA.fill(config.PRETO)
 
-        # --- Título centralizado ---
+        # Título centralizado
         surf_titulo = config.FONTE_TITULO.render("Boss Rush", True, config.PRETO)
         config.TELA.blit(surf_titulo, (config.LARGURA//2 - surf_titulo.get_width()//2, 60))
 
-        # --- Mensagem "Pressione ENTER para iniciar" (centro inferior) ---
+        # Start game
         surf_enter = config.FONTE_MEDIA.render("Pressione ENTER para iniciar", True, config.BRANCO)
         x_enter = config.LARGURA//2 - surf_enter.get_width()//2
         y_enter = config.ALTURA - 120
         config.TELA.blit(surf_enter, (x_enter, y_enter))
 
-        # --- Botão CONTROLES (canto inferior esquerdo) ---
+        # Botão CONTROLES
         surf_controles = config.FONTE_MEDIA.render("CONTROLES", True, config.CINZA)
         rect_controles = surf_controles.get_rect()
         rect_controles.topleft = (30, config.ALTURA - 70)
         config.TELA.blit(surf_controles, rect_controles)
 
-        # --- Botão SAIR (canto inferior direito) ---
+        # Botão SAIR (canto inferior direito)
         surf_sair = config.FONTE_MEDIA.render("SAIR", True, config.VERMELHO)
         rect_sair = surf_sair.get_rect()
         rect_sair.topright = (config.LARGURA - 30, config.ALTURA - 70)
@@ -57,7 +68,7 @@ def tela_menu():
 
         pygame.display.flip()
 
-        # --- Eventos ---
+        # Eventos
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
@@ -81,7 +92,7 @@ def tela_controles():
     global offset_x, offset_y
 
     while True:
-        # --- Parallax ---
+        # Parallax
         mouse_x, mouse_y = pygame.mouse.get_pos()
         alvo_x = (mouse_x / config.LARGURA - 0.5) * 60
         alvo_y = (mouse_y / config.ALTURA - 0.5) * 40
@@ -102,11 +113,11 @@ def tela_controles():
         else:
             config.TELA.fill(config.PRETO)
 
-        # --- Título ---
+        # Título
         surf_titulo = config.FONTE_GRANDE.render("CONTROLES", True, config.AMARELO)
         config.TELA.blit(surf_titulo, (config.LARGURA//2 - surf_titulo.get_width()//2, 50))
 
-        # --- Lista de comandos ---
+        # Lista de comandos
         comandos = [
             ("MOVIMENTO", "W, A, S, D"),
             ("ATACAR", "ESPAÇO ou CLIQUE ESQUERDO"),
@@ -123,7 +134,7 @@ def tela_controles():
             config.TELA.blit(surf_desc, (config.LARGURA//2 + 50, y))
             y += 45
 
-        # --- Botão VOLTAR (canto inferior esquerdo) ---
+        # Botão VOLTAR
         surf_voltar = config.FONTE_MEDIA.render("VOLTAR", True, config.BRANCO)
         rect_voltar = surf_voltar.get_rect()
         rect_voltar.topleft = (30, config.ALTURA - 70)

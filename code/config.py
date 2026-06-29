@@ -45,6 +45,18 @@ def carregar_imagem(caminho, redimensionar=None):
         print(f"Aviso: imagem não encontrada: {caminho_completo}")
         return None
 
+def carregar_som(caminho):
+    try:
+        try:
+            base_path = sys._MEIPASS
+        except AttributeError:
+            base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        caminho_completo = os.path.join(base_path, "assets", "sounds", caminho)
+        return pygame.mixer.Sound(caminho_completo)
+    except (pygame.error, FileNotFoundError) as e:
+        print(f"Erro ao carregar som {caminho}: {e}")
+        return None
+
 NOMES_CAMADAS_LUTA = ["bg.png", "mountaims.png", "windows.png", "cf.png", "candeliar.png", "floor.png", "dragon.png"]
 NOMES_CAMADAS_MENU = ["1.png", "2.png", "3.png", "4.png", "5.png"]
 
@@ -75,11 +87,11 @@ def carregar_background_menu():
             fallback.fill(PRETO)
             BACKGROUND_LAYERS_MENU.append(fallback)
 
-# Limites da arena (ajuste conforme seu cenário)
-LIMITE_ESQUERDA = 50
-LIMITE_DIREITA = LARGURA - 50
-LIMITE_TOPO = 280
-LIMITE_BAIXO = ALTURA - 80
+# Limites da arena
+LIMITE_ESQUERDA = 25
+LIMITE_DIREITA = LARGURA - 25
+LIMITE_TOPO = 335
+LIMITE_BAIXO = ALTURA - 20
 
 # Dano aleatório
 DANO_MIN_PLAYER = 67
