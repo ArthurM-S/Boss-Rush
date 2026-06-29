@@ -42,7 +42,7 @@ class Boss:
         self.projeteis = []
         self.cor = ROXO_BOSS
 
-        self.vida_maxima = 7000
+        self.vida_maxima = 5000
         self.vida = self.vida_maxima
         self.tomou_dano = False
         self.tempo_morte = 0

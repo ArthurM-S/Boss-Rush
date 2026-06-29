@@ -51,7 +51,7 @@ class Jogador:
         self.direcao = 1
         self.angulo = 0
 
-        self.vida_maxima = 500
+        self.vida_maxima = 300
         self.vida = self.vida_maxima
         self.invencivel = False
         self.tempo_invencivel = 0
